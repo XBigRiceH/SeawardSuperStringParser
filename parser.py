@@ -9,7 +9,7 @@ from openpyxl.utils import get_column_letter
 from record_types import *
 
 logger = logging.getLogger()
-logger.setLevel(logging.DEBUG)
+logger.setLevel(logging.INFO)
 console_handler = logging.StreamHandler()
 formatter = logging.Formatter(
     fmt='%(asctime)s %(levelname)-5s - %(message)s',
@@ -211,7 +211,7 @@ if __name__ == "__main__":
                 ])
                 if physical_test_result.get_status() == 'FAIL':
                     failed_row.append(current_row + used_row)
-                    failed_row.append(used_row + 1)
+                    failed_row.append(current_row + used_row + 1)
                 used_row += 2
             elif isinstance(physical_test_result, RCDTestResult):
                 formatted_results.append([

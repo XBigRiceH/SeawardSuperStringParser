@@ -40,7 +40,7 @@ class BufferedRecord:
             "RESULT_LESS_THAN": bits[3],
             "FAIL": bits[6],
             "PASS": bits[7],
-            "INFORMATION": sum(bits) == 0
+            "INFO": sum(bits) == 0
         }
         active_flags = [k for k, v in flag_map.items() if v]
         return active_flags if active_flags else ["UNKNOWN"]
@@ -86,8 +86,8 @@ class TestResult(BufferedRecord):
             return 'FAIL'
         elif 'PASS' in self.flags:
             return 'PASS'
-        elif 'INFORMATION' in self.flags:
-            return 'INFORMATION'
+        elif 'INFO' in self.flags:
+            return 'INFO'
         else:
             return 'UNKNOWN'
 

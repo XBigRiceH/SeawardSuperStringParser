@@ -1,3 +1,5 @@
 /.venv/
-*.xlsx
 /.idea/
+
+*.xlsx
+*.pdf

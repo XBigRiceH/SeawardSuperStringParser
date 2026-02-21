@@ -3,7 +3,7 @@ from reportlab.lib.pagesizes import A4, landscape
 from reportlab.lib.pdfencrypt import padding
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import cm, inch
-from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, Image
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, Image, LongTable
 from reportlab.lib.enums import TA_LEFT, TA_RIGHT, TA_CENTER
 from record_types import *
 
@@ -151,51 +151,28 @@ def create_pat_report():
 
     # %% test result table header
     result_header_content = [
-        [Paragraph("APPLIANCE DETAILS AND TEST RESULTS", style_section_header), "", "", "", "", "", '', ''],
-        [Paragraph("<b>Key</b><br/>P = PASS / F = FAIL / I = INFO / S = SKIP (OR N/A)", style_normal), "", "",
-         "", "", "", "", "", "", '', ''],
-        ['Appliance ID', 'Appliance Description', 'Test Date', 'Operator', 'Program', 'Test Items', '', "", "",
-         "Overall Status", 'Comments'],
-        ['', '', '', '', '', 'Test Type', 'Result', "Unit", "Status", "", ''],
+        [Paragraph("APPLIANCE DETAILS AND TEST RESULTS", style_section_header)],
+        [Paragraph("<b>Key</b><br/>P = PASS / F = FAIL / I = INFO / S = SKIP (OR N/A)", style_normal)],
     ]
-    result_col_widths = [
-        3 * cm,
-        6 * cm,
-        2 * cm,
-        2 * cm,
-        2.5 * cm,
-        3 * cm, 1.5 * cm, 1.25 * cm, 1.5 * cm,
-        2.5 * cm,
-        2.45 * cm
-    ]
-    result_header_table = Table(result_header_content, colWidths=result_col_widths)
+    result_header_table = Table(result_header_content, colWidths=[doc.width])
     result_header_table.setStyle(TableStyle(
         header_row_style +
         [
-            ('BACKGROUND', (0, 1), (-1, 3), light_grey),
-            ('SPAN', (0, 0), (-1, 0)),
-            ('SPAN', (0, 1), (-1, 1)),
-            ('FONTSIZE', (0, 2), (-1, -1), 8),
+            ('BACKGROUND', (0, 1), (-1, -1), light_grey),
             ('GRID', (0, 1), (-1, -1), 0.5, colors.lightgrey),
-            ('SPAN', (5, 2), (8, 2)),
-
-            ('SPAN', (0, 2), (0, 3)),
-            ('SPAN', (1, 2), (1, 3)),
-            ('SPAN', (2, 2), (2, 3)),
-            ('SPAN', (3, 2), (3, 3)),
-            ('SPAN', (4, 2), (4, 3)),
-            ('SPAN', (9, 2), (9, 3)),
-            ('SPAN', (10, 2), (10, 3)),
-            ('VALIGN', (0, 2), (-1, 3), 'MIDDLE'),
-            ('FONTNAME', (0, 2), (-1, 3), 'Helvetica-Bold'),
             ('LINEABOVE', (0, 0), (-1, 0), 1, colors.grey),
             ('LINEBEFORE', (0, 0), (0, -1), 1, colors.grey),
-            ('LINEAFTER', (10, 0), (10, -1), 1, colors.grey),
+            ('LINEAFTER', (0, 0), (0, -1), 1, colors.grey),
         ]
     ))
     elements.append(result_header_table)
 
     # %% data
+    result_header_to_be_repeated = [
+        ['Appliance ID', 'Appliance Description', 'Test Date', 'Operator', 'Program', 'Test Items', '', "", "",
+         "Overall Status", 'Comments'],
+        ['', '', '', '', '', 'Test Type', 'Result', "Unit", "Status", "", ''],
+    ]
     result_content = []
     result_style = []
 
@@ -330,15 +307,35 @@ def create_pat_report():
                 row.extend([""] * 2)
             result_content.append(to_para(row, style_normal))
 
-    result_table = Table(result_content, colWidths=result_col_widths)
+    result_table = LongTable(result_header_to_be_repeated + result_content, colWidths=[
+        3 * cm,
+        6 * cm,
+        2 * cm,
+        2 * cm,
+        2.5 * cm,
+        3 * cm, 1.5 * cm, 1.25 * cm, 1.5 * cm,
+        2.5 * cm,
+        2.45 * cm
+    ], repeatRows=2)
     result_table.setStyle(TableStyle(
-        header_row_style +
         [
-            ('SPAN', (0, 0), (-1, 0)),
-            ('GRID', (0, 1), (-1, -1), 0.5, colors.lightgrey),
+            ('FONTSIZE', (0, 0), (-1, -1), 8),
+            ('GRID', (0, 0), (-1, -1), 0.5, colors.lightgrey),
             ('LINEBELOW', (0, -1), (-1, -1), 1, colors.grey),
             ('LINEBEFORE', (0, 0), (0, -1), 1, colors.grey),
             ('LINEAFTER', (10, 0), (10, -1), 1, colors.grey),
+
+            ('SPAN', (5, 0), (8, 0)),
+            ('SPAN', (0, 0), (0, 1)),
+            ('SPAN', (1, 0), (1, 1)),
+            ('SPAN', (2, 0), (2, 1)),
+            ('SPAN', (3, 0), (3, 1)),
+            ('SPAN', (4, 0), (4, 1)),
+            ('SPAN', (9, 0), (9, 1)),
+            ('SPAN', (10, 0), (10, 1)),
+            ('VALIGN', (0, 0), (-1, 1), 'MIDDLE'),
+            ('FONTNAME', (0, 0), (-1, 1), 'Helvetica-Bold'),
+            ('BACKGROUND', (0, 0), (-1, 1), light_grey),
         ]
     ))
     elements.append(result_table)

@@ -453,13 +453,13 @@ if __name__ == "__main__":
                                 "RCD Test Current",
                                 physical_test_result.test_current.value,
                                 physical_test_result.test_current.unit,
-                                "INFORMATION"
+                                "INFO"
                             ])
                             formatted_results.append([
                                 "RCD Test Circle Angle",
                                 physical_test_result.circle_angle.value,
                                 physical_test_result.circle_angle.unit,
-                                "INFORMATION"
+                                "INFO"
                             ])
                             formatted_results.append([
                                 "RCD Test Trip time",

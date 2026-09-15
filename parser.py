@@ -102,7 +102,6 @@ if __name__ == "__main__":
             machine_info = instance
         else:
             test_results.append(instance)
-            test_results.append(instance)
         logger.debug(f'Record content = {instance}')
 
     result_file_path = f"{os.path.splitext(os.path.basename(file_path))[0]}_parsed_{datetime.now().strftime('%y_%m_%d_%H_%M_%S')}"
